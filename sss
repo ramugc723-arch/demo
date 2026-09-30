@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetVibe · modern betting</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0b0f1c, #03050b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            color: #eef2ff;
+            line-height: 1.5;
+        }
+
+        /* main glass container */
+        .bet-app {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(12, 18, 34, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 42px;
+            border: 1px solid rgba(90, 140, 255, 0.2);
+            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(60, 130, 255, 0.1) inset;
+            padding: 2rem 2rem 2rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* header area */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #7c9aff, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 10px rgba(124, 154, 255, 0.6));
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #b9c8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .wallet {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: rgba(20, 30, 55, 0.7);
+            padding: 8px 18px 8px 22px;
+            border-radius: 80px;
+            border: 1px solid rgba(110, 160, 255, 0.3);
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+            transition: all 0.2s;
+        }
+
+        .wallet:hover {
+            border-color: rgba(150, 190, 255, 0.6);
+            background: rgba(30, 45, 80, 0.8);
+        }
+
+        .wallet i {
+            font-size: 1.3rem;
+            color: #7c9aff;
+        }
+
+        .wallet .balance {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #eef5ff;
+            letter-spacing: 0.3px;
+        }
+
+        .wallet .balance small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #9bb1e0;
+            margin-left: 4px;
+        }
+
+        .deposit-btn {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 8px 18px -6px #2563eb80;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .deposit-btn:hover {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px -6px #2563ebcc;
+        }
+
+        /* stats row */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(18, 28, 50, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(80, 130, 220, 0.2);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(120, 170, 255, 0.5);
+            background: rgba(30, 45, 75, 0.8);
+            box-shadow: 0 15px 25px -10px #0a1a3a;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9bb1e0;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value i {
+            font-size: 1.4rem;
+            color: #7c9aff;
+            opacity: 0.8;
+        }
+
+        .live-pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 #22c55ecc;
+            animation: pulse 2s infinite;
+            margin-left: 6px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 #22c55ecc; }
+            70% { box-shadow: 0 0 0 10px #22c55e00; }
+            100% { box-shadow: 0 0 0 0 #22c55e00; }
+        }
+
+        /* section title */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 2rem 0 1.2rem 0;
+        }
+
+        .section-title h2 {
+            font-weight: 600;
+            font-size: 1.6rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(to right, #eef5ff, #b0c6ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-title .line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(100, 150, 255, 0.6), transparent);
+            border-radius: 4px;
+        }
+
+        /* match grid */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 18px;
+            margin-bottom: 2rem;
+        }
+
+        .match-card {
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 1.4rem 1.4rem 1.2rem 1.4rem;
+            border: 1px solid rgba(60, 110, 200, 0.25);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+            cursor: pointer;
+            box-shadow: 0 15px 25px -15px #000000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .match-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: #3b82f6;
+            background: rgba(24, 38, 70, 0.9);
+            box-shadow: 0 25px 35px -12px #1e3a8a80, 0 0 0 1px #3b82f655 inset;
+        }
+
+        .league {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #93b4ff;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .league i {
+            color: #facc15;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
+        .live-badge {
+            background: #ef4444;
+            padding: 4px 10px;
+            border-radius: 40px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 10px -4px #ef4444;
+        }
+
+        .teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.6rem;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 40%;
+        }
+
+        .team .icon {
+            font-size: 2.2rem;
+            background: rgba(60, 100, 200, 0.2);
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #3b82f660;
+        }
+
+        .team span {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #eef5ff;
+        }
+
+        .vs {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #4867b0;
+            text-shadow: 0 0 10px #1e3a8a;
+        }
+
+        .odds {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            justify-content: center;
+        }
+
+        .odd-btn {
+            background: rgba(30, 45, 80, 0.8);
+            border: 1px solid #2d4370;
+            color: #d9e6ff;
+            font-weight: 700;
+            padding: 12px 0;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 10px -6px black;
+        }
+
+        .odd-btn:hover {
+            background: linear-gradient(145deg, #2563eb, #3b82f6);
+            border-color: #60a5fa;
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 10px 18px -6px #2563eb;
+        }
+
+        .odd-btn small {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #a0b8e0;
+            letter-spacing: 0.3px;
+        }
+
+        /* bets lip / footer */
+        .bet-slip {
+            background: rgba(10, 18, 32, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            border: 1px solid rgba(70, 120, 230, 0.4);
+            padding: 1.5rem 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 20px 30px -15px #000000;
+            transition: all 0.3s ease;
+            margin-top: 1.2rem;
+        }
+
+        .bet-slip:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 20px 35px -10px #1e3a8a;
+        }
+
+        .slip-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .slip-icon {
+            background: #1d2b4b;
+            width: 52px;
+            height: 52px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #7c9aff;
+            border: 1px solid #3b82f660;
+        }
+
+        .slip-details h4 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #b9d0ff;
+            margin-bottom: 4px;
+        }
+
+        .slip-details p {
+            color: #92a8d0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slip-details p i {
+            color: #facc15;
+            font-size: 0.8rem;
+        }
+
+        .slip-actions {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .stake-input {
+            display: flex;
+            align-items: center;
+            background: #0a1222;
+            border-radius: 60px;
+            border: 1px solid #2e4170;
+            padding: 2px;
+        }
+
+        .stake-input span {
+            padding: 0 12px;
+            font-weight: 600;
+            color: #8aa3df;
+        }
+
+        .stake-input input {
+            background: #111e36;
+            border: none;
+            width: 100px;
+            padding: 12px 14px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stake-input input:focus {
+            background: #1a2b4a;
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .stake-input input::placeholder {
+            color: #4d6390;
+        }
+
+        .place-bet-btn {
+            background: linear-gradient(145deg, #22c55e, #16a34a);
+            border: none;
+            border-radius: 60px;
+            padding: 14px 34px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0a0f1c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 12px 25px -8px #22c55e;
+            border: 1px solid #4ade80;
+            letter-spacing: 0.3px;
+        }
+
+        .place-bet-btn:hover {
+            background: linear-gradient(145deg, #4ade80, #22c55e);
+            transform: scale(1.02);
+            box-shadow: 0 18px 30px -8px #22c55e;
+        }
+
+        .place-bet-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* toast / notification (dynamic) */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1e2b4b;
+            backdrop-filter: blur(12px);
+            padding: 14px 28px;
+            border-radius: 60px;
+            border: 1px solid #3b82f6;
+            color: #eef5ff;
+            font-weight: 500;
+            box-shadow: 0 20px 35px -10px black;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 999;
+            font-size: 1rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast i {
+            color: #22c55e;
+            font-size: 1.3rem;
+        }
+
+        /* responsive */
+        @media (max-width: 650px) {
+            .bet-app {
+                padding: 1.5rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .wallet {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .bet-slip {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .slip-actions {
+                justify-content: space-between;
+            }
+            .place-bet-btn {
+                padding: 14px 20px;
+                justify-content: center;
+            }
+            .logo h1 {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .slip-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .stake-input {
+                justify-content: center;
+            }
+            .stake-input input {
+                width: 100%;
+            }
+        }
+
+        /* custom scroll & selection */
+        ::selection {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* subtle animation for cards on load */
+        .match-card {
+            animation: fadeUp 0.6s ease backwards;
+        }
+
+        .match-card:nth-child(1) { animation-delay: 0.05s; }
+        .match-card:nth-child(2) { animation-delay: 0.15s; }
+        .match-card:nth-child(3) { animation-delay: 0.25s; }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bet-app">
+        <!-- header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-dice-d6"></i>
+                <h1>BetVibe</h1>
+            </div>
+            <div class="wallet">
+                <i class="fas fa-coins"></i>
+                <span class="balance" id="walletBalance">$2,450 <small>USD</small></span>
+                <button class="deposit-btn" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button>
+            </div>
+        </div>
+
+        <!-- stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-label">Active bets</span>
+                <div class="stat-value">3 <i class="fas fa-ticket-alt"></i></div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Live now</span>
+                <div class="stat-value">8 <span class="live-pulse"></span></div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Win rate</span>
+                <div class="stat-value">68% <i class="fas fa-chart-line"></i></div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Bonus</span>
+                <div class="stat-value">$120 <i class="fas fa-gift"></i></div>
+            </div>
+        </div>
+
+        <!-- upcoming matches -->
+        <div class="section-title">
+            <h2>🔥 Live & upcoming</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="matches-grid" id="matchesGrid">
+            <!-- match 1 -->
+            <div class="match-card" data-match="1" data-team1="Lakers" data-team2="Warriors">
+                <div class="league">
+                    <span><i class="fas fa-basketball"></i> NBA · Western</span>
+                    <span class="live-badge"><i class="fas fa-circle"></i> LIVE</span>
+                </div>
+                <div class="teams">
+                    <div class="team">
+                        <div class="icon">🏀</div>
+                        <span>Lakers</span>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team">
+                        <div class="icon">🏀</div>
+                        <span>Warriors</span>
+                    </div>
+                </div>
+                <div class="odds">
+                    <div class="odd-btn" data-odd="1.85" data-selection="Lakers">1.85 <small>LAL</small></div>
+                    <div class="odd-btn" data-odd="2.10" data-selection="Warriors">2.10 <small>GSW</small></div>
+                </div>
+            </div>
+            <!-- match 2 -->
+            <div class="match-card" data-match="2" data-team1="Real Madrid" data-team2="Barcelona">
+                <div class="league">
+                    <span><i class="fas fa-futbol"></i> La Liga</span>
+                    <span class="live-badge" style="background:#f59e0b;"><i class="fas fa-clock"></i> 21:00</span>
+                </div>
+                <div class="teams">
+                    <div class="team">
+                        <div class="icon">⚽</div>
+                        <span>Real Madrid</span>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team">
+                        <div class="icon">⚽</div>
+                        <span>Barcelona</span>
+                    </div>
+                </div>
+                <div class="odds">
+                    <div class="odd-btn" data-odd="2.05" data-selection="Real Madrid">2.05 <small>RMA</small></div>
+                    <div class="odd-btn" data-odd="3.40" data-selection="Barcelona">3.40 <small>BAR</small></div>
+                </div>
+            </div>
+            <!-- match 3 -->
+            <div class="match-card" data-match="3" data-team1="Chiefs" data-team2="Bills">
+                <div class="league">
+                    <span><i class="fas fa-football"></i> NFL · Playoffs</span>
+                    <span class="live-badge" style="background:#3b82f6;"><i class="fas fa-calendar"></i> SUN</span>
+                </div>
+                <div class="teams">
+                    <div class="team">
+                        <div class="icon">🏈</div>
+                        <span>Chiefs</span>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team">
+                        <div class="icon">🏈</div>
+                        <span>Bills</span>
+                    </div>
+                </div>
+                <div class="odds">
+                    <div class="odd-btn" data-odd="1.95" data-selection="Chiefs">1.95 <small>KC</small></div>
+                    <div class="odd-btn" data-odd="1.95" data-selection="Bills">1.95 <small>BUF</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- bet slip / place bet -->
+        <div class="bet-slip" id="betSlip">
+            <div class="slip-info">
+                <div class="slip-icon"><i class="fas fa-receipt"></i></div>
+                <div class="slip-details">
+                    <h4 id="selectedBetDisplay">No selection</h4>
+                    <p><i class="fas fa-chart-simple"></i> <span id="selectedOddDisplay">—</span> odds · potential win: <span id="potentialWin">$0.00</span></p>
+                </div>
+            </div>
+            <div class="slip-actions">
+                <div class="stake-input">
+                    <span>$</span>
+                    <input type="number" id="stakeAmount" placeholder="10.00" min="1" step="1" value="10">
+                </div>
+                <button class="place-bet-btn" id="placeBetBtn"><i class="fas fa-check-circle"></i> Place bet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Bet placed successfully!</span>
+    </div>
+
+    <script>
+        (function() {
+            // State
+            let balance = 2450.00;
+            let currentSelection = null;   // { match, team, odd }
+            let stake = 10;
+
+            // DOM elements
+            const walletBalanceEl = document.getElementById('walletBalance');
+            const selectedBetDisplay = document.getElementById('selectedBetDisplay');
+            const selectedOddDisplay = document.getElementById('selectedOddDisplay');
+            const potentialWinEl = document.getElementById('potentialWin');
+            const stakeInput = document.getElementById('stakeAmount');
+            const placeBetBtn = document.getElementById('placeBetBtn');
+            const depositBtn = document.getElementById('depositBtn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            // Update balance UI
+            function updateBalanceUI() {
+                walletBalanceEl.innerHTML = `$${balance.toFixed(2)} <small>USD</small>`;
+            }
+
+            // Update potential win based on stake & selected odd
+            function updatePotentialWin() {
+                if (currentSelection) {
+                    const odds = currentSelection.odd;
+                    const winAmount = stake * odds;
+                    potentialWinEl.textContent = `$${winAmount.toFixed(2)}`;
+                } else {
+                    potentialWinEl.textContent = '$0.00';
+                }
+            }
+
+            // Reset selection UI (when needed)
+            function resetSelectionUI() {
+                selectedBetDisplay.textContent = 'No selection';
+                selectedOddDisplay.textContent = '—';
+                potentialWinEl.textContent = '$0.00';
+                currentSelection = null;
+                updatePotentialWin();
+            }
+
+            // Show toast message
+            function showToast(message, isSuccess = true) {
+                toastMessage.textContent = message;
+                toast.querySelector('i').className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+                toast.querySelector('i').style.color = isSuccess ? '#22c55e' : '#ef4444';
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2800);
+            }
+
+            // Attach click listeners to all odd buttons (event delegation)
+            document.querySelectorAll('.odd-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const oddValue = parseFloat(this.dataset.odd);
+                    const selectionName = this.dataset.selection;
+
+                    // Find parent match card
+                    const matchCard = this.closest('.match-card');
+                    const matchId = matchCard.dataset.match;
+                    const team1 = matchCard.dataset.team1;
+                    const team2 = matchCard.dataset.team2;
+
+                    // Set current selection
+                    currentSelection = {
+                        matchId,
+                        team1,
+                        team2,
+                        team: selectionName,
+                        odd: oddValue
+                    };
+
+                    // Update UI display
+                    selectedBetDisplay.textContent = `${selectionName} @ ${oddValue.toFixed(2)}`;
+                    selectedOddDisplay.textContent = oddValue.toFixed(2);
+
+                    // Update potential win
+                    updatePotentialWin();
+
+                    // Optional: subtle highlight on selected button
+                    // Remove any existing highlights
+                    document.querySelectorAll('.odd-btn').forEach(b => b.style.boxShadow = 'none');
+                    this.style.boxShadow = '0 0 0 2px #7c9aff, 0 8px 18px -6px #2563eb';
+                });
+            });
+
+            // Stake input change
+            stakeInput.addEventListener('input', function() {
+                let val = parseFloat(this.value);
+                if (isNaN(val) || val < 1) {
+                    val = 1;
+                    this.value = 1;
+                }
+                stake = val;
+                updatePotentialWin();
+            });
+
+            // Place bet action
+            placeBetBtn.addEventListener('click', function() {
+                if (!currentSelection) {
+                    showToast('Select an odd first', false);
+                    return;
+                }
+
+                const stakeValue = parseFloat(stakeInput.value);
+                if (isNaN(stakeValue) || stakeValue < 1) {
+                    showToast('Minimum stake is $1', false);
+                    return;
+                }
+
+                if (stakeValue > balance) {
+                    showToast('Insufficient balance', false);
+                    return;
+                }
+
+                // Deduct balance
+                balance -= stakeValue;
+                updateBalanceUI();
+
+                // Show success toast
+                const potential = (stakeValue * currentSelection.odd).toFixed(2);
+                showToast(`Bet placed: $${stakeValue.toFixed(2)} on ${currentSelection.team} @ ${currentSelection.odd.toFixed(2)}`, true);
+
+                // Reset selection after bet
+                resetSelectionUI();
+
+                // reset highlight of odd buttons
+                document.querySelectorAll('.odd-btn').forEach(b => b.style.boxShadow = 'none');
+
+                // (optional) stake reset to 10
+                stakeInput.value = 10;
+                stake = 10;
+                updatePotentialWin();
+            });
+
+            // Deposit button (simulated)
+            depositBtn.addEventListener('click', function() {
+                balance += 500;
+                updateBalanceUI();
+                showToast('$500 added to your wallet!', true);
+            });
+
+            // Initialize
+            updateBalanceUI();
+            updatePotentialWin();
+
+            // Click on match card (but not on odd buttons) just for fun – focus feel
+            document.querySelectorAll('.match-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('odd-btn') || e.target.closest('.odd-btn')) return;
+                    // subtle animation or just log
+                });
+            });
+
+            // Stake input enter key prevents default
+            stakeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    placeBetBtn.click();
+                }
+            });
+
+            // additional UX: reset selection on double click anywhere (not necessary but nice)
+            // Actually not needed.
+        })();
+    </script>
+</body>
+</html>
